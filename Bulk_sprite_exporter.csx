@@ -21,17 +21,16 @@ if (ShowInputDialog() == System.Windows.Forms.DialogResult.Cancel)
 string[] arrayString = input.ToArray();
 
 var _savePattern = String.Join(";", arrayString);
-ScriptMessage(_savePattern);
 Configuration[_configuration_pattern] = _savePattern;
 
 UpdateProgress();
-await DumpSprites();
+await DumpSprites("");
 worker.Cleanup();
 HideProgressBar();
 ScriptMessage("Export Complete.\n\nLocation: " + texFolder);
 
-void UpdateProgress() {
-    UpdateProgressBar(null, "Sprites", progress++, Data.Sprites.Count);
+void UpdateProgress(string last_sprite) {
+    UpdateProgressBar(null, last_sprite, progress++, Data.Sprites.Count);
 }
 
 string GetFolder(string path) {
@@ -52,7 +51,7 @@ void DumpSprite(UndertaleSprite sprite) {
 				worker.ExportAsPNG(sprite.Textures[i].Texture, texFolder + sprite.Name.Content + "\\" + i + ".png");
 			}
 				
-    UpdateProgress();
+    UpdateProgress(sprite.Name.Content);
 }
 
 private  DialogResult ShowInputDialog()
